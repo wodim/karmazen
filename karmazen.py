@@ -16,7 +16,7 @@ from classes import LinksPage, Link
 config = ConfigParser()
 config.readfp(open("config.ini"))
 username = config.get("karmazen", "username")
-username = config.get("karmazen", "password")
+password = config.get("karmazen", "password")
 
 r_s = requests.Session()
 r_s.headers = {"User-Agent": USER_AGENT}
