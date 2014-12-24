@@ -4,7 +4,7 @@ import math
 import random
 
 USER_AGENT = ("Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36"
-              "(KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
+              " (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
 
 # dependiendo de la hora puede que no nos interese iniciar sesión siquiera.
 activity = {
