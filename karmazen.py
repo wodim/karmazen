@@ -3,6 +3,7 @@
 from bs4 import BeautifulSoup
 from ConfigParser import ConfigParser
 from datetime import datetime
+import logging
 import math
 import random
 import requests
@@ -17,6 +18,7 @@ config = ConfigParser()
 config.readfp(open("config.ini"))
 username = config.get("karmazen", "username")
 password = config.get("karmazen", "password")
+logging.basicConfig(format="%(asctime)s %(message)s", level=logging.INFO)
 
 r_s = requests.Session()
 r_s.headers = {"User-Agent": USER_AGENT}
@@ -29,9 +31,13 @@ payload = {"username": username,
            "return": "/"}
 r = r_s.post(LOGIN_URL_POST, data=payload)
 soup = BeautifulSoup(r.text)
-assert r.url == FRONT_PAGE_URL and soup.find("li", {"class": "usertext"})
+try:
+    assert r.url == FRONT_PAGE_URL and soup.find("li", {"class": "usertext"})
+except AssertionError:
+    logging.error(u"No puedo iniciar sesión.")
+    sys.exit(1)
 
-print u"Sesión iniciada."
+logging.info(u"Sesión iniciada.")
 
 r_s.user_id = int(urllib.unquote(r_s.cookies["u"]).split(":", 1)[0])
 r_s.control_key = r_s.cookies["k"]
@@ -40,7 +46,7 @@ r_s.control_key = r_s.cookies["k"]
 while True:
     # compruebo si NO es el momento de ponerse en marcha y me echo a dormir.
     if not should_i(activity[datetime.now().hour] * 2):
-        print "No es momento de despertarse. Me echo a dormir."
+        logging.info("No es momento de despertarse. Me echo a dormir.")
         time.sleep(normal_delay(LONG_SLEEP_DELAY))
         continue
 
@@ -53,8 +59,8 @@ while True:
         # votar o no votar.
         for link in front_page.links:
             if should_i(0.4) and not link.voted:
-                print ("He considerado votar %s (%d de karma)"
-                      " (PORTADA)") % (link.url, link.karma)
+                logging.info("He considerado votar %s (%d de karma)"
+                             " (PORTADA)" % (link.url, link.karma))
                 time.sleep(exp_delay(MID_INTERACTION_DELAY))
                 link.upvote()
 
@@ -67,7 +73,8 @@ while True:
         # superior y sin tener en cuenta negativos o advertencias
         if (should_i(0.8) and
                 link in queue_page_sorted[:len(queue_page_sorted) / 8]):
-            print "Voy a votar %s (%d de karma)" % (link.url, link.karma)
+            logging.info("Voy a votar %s (%d de karma)" % (link.url,
+                                                           link.karma))
             time.sleep(exp_delay(MID_INTERACTION_DELAY))
             link.upvote()
             continue
@@ -80,10 +87,10 @@ while True:
                 link in queue_page_sorted[:len(queue_page_sorted) / 2] and
                 link.votes_negatives <= math.ceil(link.votes_users * 0.3) and
                 not link.voted):
-            print "He considerado votar %s (%d de karma)" % (link.url,
-                                                             link.karma)
+            logging.info("He considerado votar %s (%d de karma)" % (link.url,
+                                                                    link.karma))
             time.sleep(exp_delay(MID_INTERACTION_DELAY))
             link.upvote()
 
-    print "Me echo a dormir."
+    logging.info("Me echo a dormir.")
     time.sleep(normal_delay(LONG_SLEEP_DELAY))
