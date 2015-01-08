@@ -19,7 +19,11 @@ config = ConfigParser()
 config.readfp(open("config.ini"))
 username = config.get("karmazen", "username")
 password = config.get("karmazen", "password")
-logging.basicConfig(format="%(asctime)s %(message)s", level=logging.INFO)
+logging.basicConfig(format="%(asctime)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.INFO)
+
+if not username or not password:
+    logging.error(u"Usuario y/o contraseña inexistentes.")
+    sys.exit(1)
 
 r_s = requests.Session()
 r_s.headers = {"User-Agent": USER_AGENT}

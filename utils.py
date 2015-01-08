@@ -29,13 +29,12 @@ LONG_INTERACTION_DELAY = 60
 LONG_SLEEP_DELAY = 20 * 60
 
 # urls.
-BASE_URL = "https://www.meneame.net"
-LOGIN_URL_GET = BASE_URL + "/login?return=%2Flogin"
-LOGIN_URL_POST = BASE_URL + "/login"
-FRONT_PAGE_URL = BASE_URL + "/"
-QUEUE_URL = BASE_URL + "/queue"
-
-UPVOTE_URL = "https://www.meneame.net/backend/menealo"
+BASE_URL = "https://www.meneame.net/"
+LOGIN_URL_GET = BASE_URL + "login?return=%2Flogin"
+LOGIN_URL_POST = BASE_URL + "login"
+FRONT_PAGE_URL = BASE_URL
+QUEUE_URL = BASE_URL + "queue"
+UPVOTE_URL = BASE_URL + "backend/menealo"
 
 def exp_delay(delay):
     variation = (1 / (1 + math.exp((-delay + 70) / 50))) * 10
