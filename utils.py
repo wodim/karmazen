@@ -37,7 +37,6 @@ QUEUE_URL = BASE_URL + "/queue"
 
 UPVOTE_URL = "https://www.meneame.net/backend/menealo"
 
-# fumada
 def exp_delay(delay):
     variation = (1 / (1 + math.exp((-delay + 70) / 50))) * 10
     return random.uniform(delay - variation, delay + variation)

@@ -1,10 +1,13 @@
-from bs4 import BeautifulSoup
 import re
 import urllib
 
+from bs4 import BeautifulSoup
+
 from utils import *
 
+
 class LinksPage(object):
+
     def __init__(self, session, url):
         self.session = session
         self.url = url
@@ -21,7 +24,10 @@ class LinksPage(object):
         return [link for link in sorted(self.links,
                                         key=lambda x: x.karma,
                                         reverse=True)]
+
+
 class Link(object):
+
     def __init__(self, session, referrer=None, **kw):
         self.session = session
         self.referrer = referrer
@@ -39,20 +45,22 @@ class Link(object):
     def from_soup(cls, soup, **kw):
         obj = cls(kw["session"], kw["referrer"])
 
-        obj._id = int(soup.find("div", attrs={"class": "votes"}) \
-                       .find("a")["id"].replace("a-votes-", ""))
+        obj._id = int(soup.find("div", attrs={"class": "votes"})
+                      .find("a")["id"].replace("a-votes-", ""))
         obj.title = soup.find("h2").find("a").text
         obj.url = soup.find("div", {"class": "share_icons"})["data-url"]
 
         obj.votes_users = int(soup.find("span", id=re.compile("^a-usu-")).text)
-        obj.votes_anonymous = int(soup.find("span", id=re.compile("^a-ano-")).text)
-        obj.votes_negatives = int(soup.find("span", id=re.compile("^a-neg-")).text)
+        obj.votes_anonymous = int(
+            soup.find("span", id=re.compile("^a-ano-")).text)
+        obj.votes_negatives = int(
+            soup.find("span", id=re.compile("^a-neg-")).text)
         obj.votes = obj.votes_users + obj.votes_anonymous
         try:
             obj.comments = int(soup.find("span",
-                                         attrs={"class": "comments-counter"}) \
-                                   .find("span",
-                                         attrs={"class": "counter"}).text)
+                                         attrs={"class": "comments-counter"})
+                               .find("span",
+                                     attrs={"class": "counter"}).text)
         except AttributeError:
             obj.comments = 0
         obj.karma = int(soup.find("span", id=re.compile("^a-karma")).text)

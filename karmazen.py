@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from bs4 import BeautifulSoup
 from ConfigParser import ConfigParser
 from datetime import datetime
 import logging
@@ -11,8 +10,10 @@ import time
 import urllib
 import sys
 
-from utils import *
+from bs4 import BeautifulSoup
+
 from classes import LinksPage, Link
+from utils import *
 
 config = ConfigParser()
 config.readfp(open("config.ini"))
