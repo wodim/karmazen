@@ -100,7 +100,7 @@ class Link(object):
     def downvote(self, downvote_code):
         if not self.voted and downvote_code:
             payload = {"id": self._id, "user": self.session.user_id,
-                       "value": downvote_type, "key": self.session.control_key, 
+                       "value": downvote_code, "key": self.session.control_key, 
                        "l": 0, "u": urllib.quote_plus(self.referrer),
                        "_": random.randint(1000000000000, 9999999999999)}
             r = self.session.get(DOWNVOTE_URL, params=payload)
