@@ -35,6 +35,7 @@ LOGIN_URL_POST = BASE_URL + "login"
 FRONT_PAGE_URL = BASE_URL
 QUEUE_URL = BASE_URL + "queue"
 UPVOTE_URL = BASE_URL + "backend/menealo"
+DOWNVOTE_URL = BASE_URL + "backend/problem"
 
 def exp_delay(delay):
     variation = (1 / (1 + math.exp((-delay + 70) / 50))) * 10
