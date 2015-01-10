@@ -83,6 +83,8 @@ class Link(object):
                 return r.json()
             except ValueError:
                 return False # caído, baneado, etc
+        else:
+            return False
 
     """
     Tipos de voto negativo que se pasan a downvote_code:
