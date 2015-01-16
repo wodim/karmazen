@@ -76,18 +76,18 @@ class Link(object):
         return obj
 
     def upvote(self):
-        if not self.voted:
-            payload = {"id": self._id, "user": self.session.user_id,
-                       "key": self.session.control_key, "l": 0,
-                       "u": urllib.quote_plus(self.referrer),
-                       "_": random.randint(1000000000000, 9999999999999)}
-            r = self.session.get(UPVOTE_URL, params=payload)
-            try:
-                return r.json()
-            except ValueError:
-                return False # caído, baneado, etc
-        else:
+        if self.voted:
             return False
+
+        payload = {"id": self._id, "user": self.session.user_id,
+                   "key": self.session.control_key, "l": 0,
+                   "u": urllib.quote_plus(self.referrer),
+                   "_": random.randint(1000000000000, 9999999999999)}
+        r = self.session.get(UPVOTE_URL, params=payload)
+        try:
+            return r.json()
+        except ValueError:
+            return False # caído, baneado, etc
 
     """
     Tipos de voto negativo que se pasan a downvote_code:
@@ -100,18 +100,20 @@ class Link(object):
       -7 = microblogging
       -8 = errónea
       -9 = copia/plagio
-    No hay valor por defecto si no se pasa ningún código.
     """
     def downvote(self, downvote_code):
-        if not self.voted and downvote_code:
-            payload = {"id": self._id, "user": self.session.user_id,
-                       "value": downvote_code, "key": self.session.control_key,
-                       "l": 0, "u": urllib.quote_plus(self.referrer),
-                       "_": random.randint(1000000000000, 9999999999999)}
-            r = self.session.get(DOWNVOTE_URL, params=payload)
-            try:
-                return r.json()
-            except ValueError:
-                return False
-        else:
+        if not downvote_code in range(-9, 0):
+            raise ValueError("downvote_code debe ser un entero entre -9 y -1")
+
+        if self.voted:
+            return False
+
+        payload = {"id": self._id, "user": self.session.user_id,
+                   "value": downvote_code, "key": self.session.control_key,
+                   "l": 0, "u": urllib.quote_plus(self.referrer),
+                   "_": random.randint(1000000000000, 9999999999999)}
+        r = self.session.get(DOWNVOTE_URL, params=payload)
+        try:
+            return r.json()
+        except ValueError:
             return False
