@@ -49,7 +49,10 @@ class Link(object):
 
         obj._id = int(soup.find("div", attrs={"class": "votes"})
                       .find("a")["id"].replace("a-votes-", ""))
-        obj.title = soup.find("h2").find("a").text
+        if soup.find("h2"):
+            obj.title = soup.find("h2").find("a").text
+        else:
+            obj.title = soup.find("h1").find("a").text
         obj.url = soup.find("div", {"class": "share_icons"})["data-url"]
 
         obj.votes_users = int(soup.find("span", id=re.compile("^a-usu-")).text)
@@ -102,7 +105,7 @@ class Link(object):
     def downvote(self, downvote_code):
         if not self.voted and downvote_code:
             payload = {"id": self._id, "user": self.session.user_id,
-                       "value": downvote_code, "key": self.session.control_key, 
+                       "value": downvote_code, "key": self.session.control_key,
                        "l": 0, "u": urllib.quote_plus(self.referrer),
                        "_": random.randint(1000000000000, 9999999999999)}
             r = self.session.get(DOWNVOTE_URL, params=payload)
