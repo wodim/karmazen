@@ -15,6 +15,7 @@ class LinksPage(object):
         self.url = url
 
         r = session.get(url)
+        session.control_key = session.cookies["k"] # update the control key
         soup = BeautifulSoup(r.text)
 
         assert r.status_code == 200 and soup.find("li", {"class": "usertext"})
