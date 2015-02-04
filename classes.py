@@ -69,6 +69,11 @@ class Link(object):
                                      attrs={"class": "counter"}).text)
         except AttributeError:
             obj.comments = 0
+        try:
+            obj.clicks = to_int(soup.find("div",
+                                          attrs={"class": "clics"}).text)
+        except AttributeError:
+            obj.clicks = 0
         obj.karma = int(soup.find("span", id=re.compile("^a-karma")).text)
 
         obj.warning = soup.find("div", attrs={"class": "warn"}) is None
@@ -79,6 +84,9 @@ class Link(object):
     def upvote(self):
         if self.voted:
             return False
+
+        if self.clicks <= self.votes:
+            self.click()
 
         payload = {"id": self._id, "user": self.session.user_id,
                    "key": self.session.control_key, "l": 0,
@@ -118,3 +126,7 @@ class Link(object):
             return r.json()
         except ValueError:
             return False
+
+    def click(self):
+        payload = {"id": self._id}
+        self.session.get(CLICK_URL, params=payload, allow_redirects=False)

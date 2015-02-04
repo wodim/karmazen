@@ -36,6 +36,7 @@ FRONT_PAGE_URL = BASE_URL
 QUEUE_URL = BASE_URL + "queue"
 UPVOTE_URL = BASE_URL + "backend/menealo"
 DOWNVOTE_URL = BASE_URL + "backend/problem"
+CLICK_URL = BASE_URL + "go"
 
 def exp_delay(delay):
     variation = (1 / (1 + math.exp((-delay + 70) / 50))) * 10
@@ -44,3 +45,5 @@ def exp_delay(delay):
 normal_delay = lambda delay: random.uniform(delay - delay * 0.2,
                                             delay + delay * 0.2)
 should_i = lambda chance: random.uniform(0, 1) <= chance
+
+to_int = lambda x: int(''.join([c for c in x if c.isdigit()]))
