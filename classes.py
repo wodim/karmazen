@@ -72,7 +72,7 @@ class Link(object):
         try:
             obj.clicks = to_int(soup.find("div",
                                           attrs={"class": "clics"}).text)
-        except AttributeError:
+        except (AttributeError, ValueError):
             obj.clicks = 0
         obj.karma = int(soup.find("span", id=re.compile("^a-karma")).text)
 
